@@ -62,6 +62,8 @@ I tested many combinations of the above options on the following three platforms
 Conclusions
 ===========
 
+Item (1) seems like incorrect behavior. Items (2) and (3) make ``-ffpe-trap=invalid`` impossible to use with any code that legitimately wants to check for NaN values. Item (4) addresses my original question.
+
 1. With all three versions of gfortran - even 7.1.0 which claims to have ``ieee_support_nan`` true - signaling NaNs are identified as quiet NaNs by ieee_class::
 
      $ gfortran testing.f90
