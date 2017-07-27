@@ -55,8 +55,21 @@ program testing
      print *, 'about to call isnan_not_equal_to_self'
      my_result = isnan_not_equal_to_self(my_nan)
      print *, 'isnan_not_equal_to_self = ', my_result
+  case('isnan_equal_to_self')
+     print *, 'about to call isnan_equal_to_self'
+     my_result = isnan_equal_to_self(my_nan)
+     print *, 'isnan_equal_to_self = ', my_result
+  case('isnan_transfer_to_real')
+     print *, 'about to call isnan_transfer_to_real'
+     my_result = isnan_transfer_to_real(my_nan)
+     print *, 'isnan_transfer_to_real = ', my_result
+  case('isnan_transfer_to_int')
+     print *, 'about to call isnan_transfer_to_int'
+     my_result = isnan_transfer_to_int(my_nan)
+     print *, 'isnan_transfer_to_int = ', my_result
   case default
-     print *, 'second argument should be one of: ieee_is_nan, isnan, ieee_class, isnan_not_equal_to_self'
+     print *, 'second argument should be one of: ieee_is_nan, isnan, ieee_class, isnan_not&
+          &_equal_to_self, isnan_equal_to_self, isnan_transfer_to_real, isnan_transfer_to_int'
   end select
 
 contains
@@ -69,5 +82,30 @@ contains
        isnan_not_equal_to_self = .false.
     end if
   end function isnan_not_equal_to_self
+
+  logical function isnan_equal_to_self(val)
+    real(r8), intent(in) :: val
+    print *, 'in isnan_equal_to_self'
+    if (val == val) then
+       isnan_equal_to_self = .false.
+    else
+       isnan_equal_to_self = .true.
+    end if
+  end function isnan_equal_to_self
+
+  logical function isnan_transfer_to_real(val)
+    real(r8), intent(in) :: val
+    print *, 'in isnan_transfer_to_real'
+    isnan_transfer_to_real = (val == transfer(dqnan_pat, val) .or. val == transfer(dsnan_pat, val))
+  end function isnan_transfer_to_real
+
+  logical function isnan_transfer_to_int(val)
+    real(r8), intent(in) :: val
+    integer(i8) :: val_as_int
+
+    print *, 'in isnan_transfer_to_int'
+    val_as_int = transfer(val, val_as_int)
+    isnan_transfer_to_int = (val_as_int == dsnan_pat .or. val_as_int == dqnan_pat)
+  end function isnan_transfer_to_int
 
 end program testing
