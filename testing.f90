@@ -8,6 +8,7 @@ program testing
   type(ieee_class_type) :: my_class
   character(len=64) :: mode
   character(len=64) :: check_method
+  logical :: my_result
 
   call get_command_argument(1, mode)
   call get_command_argument(2, check_method)
@@ -52,7 +53,8 @@ program testing
      end if
   case('isnan_not_equal_to_self')
      print *, 'about to call isnan_not_equal_to_self'
-     print *, 'isnan_not_equal_to_self = ', isnan_not_equal_to_self(my_nan)
+     my_result = isnan_not_equal_to_self(my_nan)
+     print *, 'isnan_not_equal_to_self = ', my_result
   case default
      print *, 'second argument should be one of: ieee_is_nan, isnan, ieee_class, isnan_not_equal_to_self'
   end select
@@ -61,7 +63,6 @@ contains
   logical function isnan_not_equal_to_self(val)
     real(r8), intent(in) :: val
     print *, 'in isnan_not_equal_to_self'
-    call flush()
     if (val /= val) then
        isnan_not_equal_to_self = .true.
     else
