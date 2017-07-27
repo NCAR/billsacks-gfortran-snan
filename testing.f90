@@ -50,8 +50,23 @@ program testing
      else
         print *, 'UNKNOWN'
      end if
+  case('isnan_not_equal_to_self')
+     print *, 'about to call isnan_not_equal_to_self'
+     print *, 'isnan_not_equal_to_self = ', isnan_not_equal_to_self(my_nan)
   case default
-     print *, 'second argument should be one of: ieee_is_nan, isnan, ieee_class'
+     print *, 'second argument should be one of: ieee_is_nan, isnan, ieee_class, isnan_not_equal_to_self'
   end select
+
+contains
+  logical function isnan_not_equal_to_self(val)
+    real(r8), intent(in) :: val
+    print *, 'in isnan_not_equal_to_self'
+    call flush()
+    if (val /= val) then
+       isnan_not_equal_to_self = .true.
+    else
+       isnan_not_equal_to_self = .false.
+    end if
+  end function isnan_not_equal_to_self
 
 end program testing
