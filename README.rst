@@ -82,6 +82,8 @@ Item (1) seems like incorrect behavior. Items (2) and (3) make ``-ffpe-trap=inva
 
    (ifort 17.0.1 correctly identified these as signaling NaNs.)
 
+   I tried recompiling with ``-fsignaling-nans`` and got the same result (with 5.4.0 and 7.1.0).
+
 2. With all three versions of gfortran - even 7.1.0 which claims to have ``ieee_support_nan`` true - if I compile with ``-ffpe-trap=invalid``, I get a floating point exception when trying to load a NaN into a variable with ``ieee_value(my_nan, ieee_quiet_nan)`` or ``ieee_value(my_nan, ieee_signaling_nan)``::
 
      $ gfortran -ffpe-trap=invalid testing.f90
@@ -104,11 +106,13 @@ Item (1) seems like incorrect behavior. Items (2) and (3) make ``-ffpe-trap=inva
       #6  0xffffffffffffffff in ???
       Floating point exception (core dumped)
 
+   Recompiling with ``-fsignaling-nans`` did not change this (tested with 7.1.0).
+
 3. With all three versions of gfortran - even 7.1.0 which claims to have ``ieee_support_nan`` true - if I compile with ``-ffpe-trap=invalid``, I get a floating point exception when trying to call ieee_is_nan, gfortran's isnan, or ieee_class on a signaling NaN (loaded into a variable via the transfer function)::
 
      $ gfortran -ffpe-trap=invalid testing.f90
 
-     $ ./a.out transfer_qnan ieee_is_nan
+     $ ./a.out transfer_snan ieee_is_nan
       ieee_support_nan:  T
       With transfer of dsnan:
       about to call ieee_is_nan
@@ -125,6 +129,8 @@ Item (1) seems like incorrect behavior. Items (2) and (3) make ``-ffpe-trap=inva
       #5  0xffffffffffffffff in ???
       Floating point exception (core dumped)
 
+   Recompiling with ``-fsignaling-nans`` did not change this (tested with 7.1.0).
+
 4. To answer the original question of how we can check for NaN values (signaling or quiet) when compiling with ``-ffpe-trap=invalid``: It appears that the only approach is the one given in ``isnan_transfer_to_int``; this works for quiet and signaling NaNs on the three tested versions of gfortran. The others have the following problems:
 
    - ``ieee_is_nan``: floating point exception
@@ -138,3 +144,5 @@ Item (1) seems like incorrect behavior. Items (2) and (3) make ``-ffpe-trap=inva
    - ``isnan_equal_to_self``: floating point exception
 
    - ``isnan_transfer_to_real``: returns False even for a NaN value - maybe because a NaN never equals itself?
+
+   Recompiling with ``-fsignaling-nans`` did not change these results, EXCEPT that ``isnan_transfer_to_real`` gave a floating point exception rather than an incorrect answer (tested with 7.1.0).
