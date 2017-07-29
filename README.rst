@@ -152,4 +152,7 @@ Item (1) seems like incorrect behavior. Items (2) and (3) make ``-ffpe-trap=inva
    A more robust method would be to check if the given value is in the range of possible bit representations, but that's starting to feel fragile:
    I'm concerned that there may be some machines that don't follow the IEEE standard in this respect, and so the function would give the wrong answer.
 
-   So I'm going to go with a different solution: changing the compilation flags for shr\_infnan\_mod so that we avoid adding ``-ffpe-trap=invalid`` for that one module.
+   I tried going to go with a different solution: changing the compilation flags for shr\_infnan\_mod so that we avoid adding ``-ffpe-trap=invalid`` for that one module.
+   But that didn't work either: see https://github.com/ESMCI/cime/issues/1763#issuecomment-318802211
+
+   So I'm at a loss as to what to do here.
