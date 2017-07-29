@@ -146,3 +146,10 @@ Item (1) seems like incorrect behavior. Items (2) and (3) make ``-ffpe-trap=inva
    - ``isnan_transfer_to_real``: returns False even for a NaN value - maybe because a NaN never equals itself?
 
    Recompiling with ``-fsignaling-nans`` did not change these results, EXCEPT that ``isnan_transfer_to_real`` gave a floating point exception rather than an incorrect answer (tested with 7.1.0).
+
+
+   *Update:* It turns out that even the ``isnan_transfer_to_int`` method is not robust, because NaNs have many possible bit representations.
+   A more robust method would be to check if the given value is in the range of possible bit representations, but that's starting to feel fragile:
+   I'm concerned that there may be some machines that don't follow the IEEE standard in this respect, and so the function would give the wrong answer.
+
+   So I'm going to go with a different solution: changing the compilation flags for shr\_infnan\_mod so that we avoid adding ``-ffpe-trap=invalid`` for that one module.
