@@ -156,3 +156,14 @@ Item (1) seems like incorrect behavior. Items (2) and (3) make ``-ffpe-trap=inva
    But that didn't work either: see https://github.com/ESMCI/cime/issues/1763#issuecomment-318802211
 
    So I'm at a loss as to what to do here.
+
+
+===============
+GCC Bug Reports
+===============
+
+This existing gcc bug seems relevant:
+https://gcc.gnu.org/bugzilla/show_bug.cgi?id=66462 (and duplicate
+https://gcc.gnu.org/bugzilla/show_bug.cgi?id=77832).
+
+I also just opened https://gcc.gnu.org/bugzilla/show_bug.cgi?id=82207 .
